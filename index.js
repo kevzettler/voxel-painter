@@ -17,6 +17,12 @@ module.exports = function() {
   var CubeMaterial = THREE.MeshBasicMaterial
   var cube = new THREE.CubeGeometry( 50, 50, 50 )
   var wireframe = true, fill = true
+  var curAniframe = 0
+  var aniFrames = [null,null,null,null]
+  var aniInt
+  window.builder = exports;
+  window.builder.aniFrames = aniFrames;
+  window.builder.curAniframe = curAniframe;
   
   var colors = ['2ECC71', '3498DB', '34495E', 'E67E22', 'ECF0F1'].map(function(c) { return hex2rgb(c) })
   for( var c = 0; c < 5; c++ ) {
@@ -41,6 +47,56 @@ module.exports = function() {
   exports.about = function() {
     $('#about').modal()
   }
+
+  loadAniFrame = function(frameNo){
+    if(frameNo > 3 || frameNo < 0){
+      return;
+    }
+
+    aniFrames[curAniframe] = window.location.hash;
+
+    if(aniFrames[frameNo] === null){
+      aniFrames[frameNo] = window.location.hash;
+    }
+
+    window.location.hash = aniFrames[frameNo];
+    curAniframe = frameNo;
+    scene.children
+         .filter(function(el) { return el.isVoxel })
+         .map(function(mesh) { scene.remove(mesh) })
+    buildFromHash();
+  }
+  exports.loadAniFrame = loadAniFrame;
+
+  var nextAniFrame = function(){
+    if(curAniframe+1 > 3){
+      loadAniFrame(0);
+    }else{
+      loadAniFrame(curAniframe+1);
+    }
+  }
+  exports.nextAniFrame = nextAniFrame;
+
+  var prevAniFrame = function(){
+    if(curAniframe-1 < 0){
+      loadAniFrame(3);
+    }else{
+      loadAniFrame(curAniframe-1);
+    }
+  }
+  exports.prevAniFrame = prevAniFrame;
+
+  playAni = function(){
+    aniInt = window.setInterval(function(){
+      nextAniFrame();
+    },500);
+  }
+  exports.playAni = playAni;
+
+  stopAni = function(){
+    window.clearInterval(aniInt);
+  }
+  exports.stopAni = stopAni;
   
   exports.share = function() {
     var fakeGame = {
@@ -649,9 +705,8 @@ module.exports = function() {
     }
   }
 
-
+  window.buildFromHash = buildFromHash;
   function buildFromHash(hashMask) {
-
     var hash = window.location.hash.substr( 1 ),
     hashChunks = hash.split(':'),
     chunks = {}
