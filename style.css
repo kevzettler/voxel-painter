@@ -35,3 +35,10 @@ body {
 
 .btn-group > .btn {border-radius:4px; margin-right:2px; margin-left:0; margin-top:1px;}
 .btn-group > .btn + .btn {margin-left:0;}
+
+.animation_frames{list-style-type:none;}
+.animation_frames li{float:left;list-style:none;text-decoration:none;}
+.animation_frames li a{text-align:center;margin:0 5px;text-decoration:none;display:block;width:20px;height:20px;color:#FFF;background-color:#1abc9c;}
+.animation_frames li a:hover{background-color:#2fe2bf};
+body .animation_frames li .active{background-color:#FFF;}
+body .animation_frames li .herp{background-color:#CCC;}

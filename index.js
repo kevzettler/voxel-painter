@@ -53,6 +53,9 @@ module.exports = function() {
       return;
     }
 
+    $('.frame_link').removeClass('herp')
+    $('.frame_link:eq('+frameNo+')').addClass('herp')
+
     aniFrames[curAniframe] = window.location.hash;
 
     if(aniFrames[frameNo] === null){
@@ -89,7 +92,7 @@ module.exports = function() {
   playAni = function(){
     aniInt = window.setInterval(function(){
       nextAniFrame();
-    },500);
+    },200);
   }
   exports.playAni = playAni;
 
@@ -370,6 +373,35 @@ module.exports = function() {
       exports.share()
       return false
     })
+
+    $(".frame_link").click(function(e){
+      e.preventDefault()
+      $target = $(e.target)
+      frameNo = parseInt($target.text(),10) - 1
+      loadAniFrame(frameNo)
+      return false
+    })
+
+    $('.fui-arrow-left').click(function(e){
+      prevAniFrame()
+    })
+
+    $('.fui-arrow-right').click(function(e){
+      nextAniFrame()
+      return false
+    })
+
+    $('.play_link').click(function(e){
+      playAni()
+      return false
+    })
+
+    $('.stop_link').click(function(e){
+      stopAni()
+      return false
+    })
+
+
 
     $('.colorPickButton').click(pickColor)
     $('.colorPickButton').on("contextmenu", changeColor)
